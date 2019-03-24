@@ -17,6 +17,9 @@ defmodule EmojiWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    get "/emojis/:emoji_name", EmojiController, :show
+
   end
 
   # Other scopes may use custom stacks.
