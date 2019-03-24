@@ -1,9 +1,27 @@
 defmodule EmojiWeb.EmojiController do
   use EmojiWeb, :controller
 
-  def show(conn, %{"emoji_name" => "sparkles"}), do: json(conn, "✨")
-  def show(conn, %{"emoji_name" => "vulcan"}), do: json(conn, "🖖")
-  def show(conn, %{"emoji_name" => "white_check_mark"}), do: json(conn, "✅")
-  def show(conn, %{"emoji_name" => "nail_care"}), do: json(conn, "💅")
+  @lookupKey "emoji_name"
+  def lookupKey, do: @lookupKey
+
+  def show(conn, %{@lookupKey => ":sparkles:"}), do: processEmoji(conn, "✨")
+
+  def show(conn, %{@lookupKey => ":vulcan:"}), do: processEmoji(conn, "🖖")
+
+  def show(conn, %{@lookupKey => ":white_check_mark:"}), do: processEmoji(conn, "✅")
+
+  def show(conn, %{@lookupKey => ":nail_care:"}), do: processEmoji(conn, "💅")
+
+  def show(conn, _params), do: json(conn, "Woah, I don't know what to do with that...")
+
+  defp processEmoji(conn, emoji) do
+    emoji
+      |> generateEmojiJSON
+      |> finalizeResponse(conn)
+  end
+
+  defp generateEmojiJSON(emoji), do: %{ unicode: emoji }
+
+  defp finalizeResponse(res, conn), do: json(conn, res)
 
 end

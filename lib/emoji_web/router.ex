@@ -18,7 +18,7 @@ defmodule EmojiWeb.Router do
 
     get "/", PageController, :index
 
-    get "/emojis/:emoji_name", EmojiController, :show
+    get "/emojis/:#{EmojiWeb.EmojiController.lookupKey}", EmojiController, :show
 
   end
 
