@@ -9,8 +9,10 @@ defmodule EmojiWeb.EmojiController do
   def show(conn, %{@lookupKey => "vulcan"}), do: processEmoji("🖖", conn)
 
   def show(conn, %{@lookupKey => "white_check_mark"}), do: processEmoji("✅", conn)
+  def show(conn, %{@lookupKey => "white check mark"}), do: processEmoji("✅", conn)
 
   def show(conn, %{@lookupKey => "nail_care"}), do: processEmoji("💅", conn)
+  def show(conn, %{@lookupKey => "nail care"}), do: processEmoji("💅", conn)
 
   def show(conn, %{@lookupKey => emoji}) do
     emoji
