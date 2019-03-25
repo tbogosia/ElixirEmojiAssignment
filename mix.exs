@@ -32,6 +32,7 @@ defmodule Emoji.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:exmoji, github: "mroth/exmoji"},
       {:phoenix, "~> 1.4.2"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_html, "~> 2.11"},
