@@ -20,6 +20,18 @@ defmodule EmojiWeb.EmojiControllerTest do
       assert html_response(conn, 404)
     end
 
+    test "/emojis?name=moon lists 13 emojis", %{conn: conn} do
+      conn = get(conn, "/emojis?name=moon")
+      response = json_response(conn, 200)
+      assert Kernel.length(response) == 13
+    end
+
+    test "/emojis?name=nonhere lists 0 emojis", %{conn: conn} do
+      conn = get(conn, "/emojis?name=nonehere")
+      response = json_response(conn, 200)
+      assert Kernel.length(response) == 0
+    end
+
     test "/emojis lists all emojis", %{conn: conn} do
       conn = get(conn, "/emojis/")
       response = json_response(conn, 200)
