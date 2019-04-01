@@ -1,36 +1,30 @@
 defmodule EmojiWeb.EmojiController do
   use EmojiWeb, :controller
 
-  @lookupKey "emoji_name"
-  def lookupKey, do: @lookupKey
+  alias Exmoji.EmojiChar
 
-  def show(conn, %{@lookupKey => "sparkles"}), do: processEmoji("✨", conn)
-  def show(conn, %{@lookupKey => "vulcan"}), do: processEmoji("🖖", conn)
-  def show(conn, %{@lookupKey => "white_check_mark"}), do: processEmoji("✅", conn)
-  def show(conn, %{@lookupKey => "white check mark"}), do: processEmoji("✅", conn)
-  def show(conn, %{@lookupKey => "nail_care"}), do: processEmoji("💅", conn)
-  def show(conn, %{@lookupKey => "nail care"}), do: processEmoji("💅", conn)
+  @lookup_key "emoji_name"
+  def lookup_key, do: @lookup_key
 
-  def show(conn, %{@lookupKey => emoji}) do
+  def show(conn, %{@lookup_key => emoji}) do
     emoji
-    |> Exmoji.find_by_short_name()
-    |> Enum.filter(&(&1.short_name == emoji))
-    |> Enum.map(&(Exmoji.EmojiChar.render/1))
-    |> showEmojiLookupResult(conn)
+    |> Exmoji.from_short_name()
+    |> render_emoji(conn)
   end
 
-  def showEmojiLookupResult([emoji|_], conn), do: processEmoji(emoji, conn)
+  def show(conn, _) do
+    render_emoji(0, conn)
+  end
 
-  def showEmojiLookupResult(_, conn) do
+  defp render_emoji(%EmojiChar{} = emoji, conn) do
+    json(conn, %{unicode: EmojiChar.render(emoji)})
+  end
+
+  defp render_emoji(_, conn) do
     conn
     |> put_status(:not_found)
     |> put_view(EmojiWeb.ErrorView)
     |> render("404.html")
-  end
-
-  defp processEmoji(emoji, conn) do
-    jsonValue = %{unicode: emoji}
-    json(conn, jsonValue)
   end
 
 end
