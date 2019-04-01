@@ -12,12 +12,26 @@ defmodule EmojiWeb.EmojiController do
     |> render_emoji(conn)
   end
 
-  def show(conn, _) do
-    render_emoji(0, conn)
+  def show(conn, %{"name" => name}) do
+    formatted_emoji =
+    Exmoji.find_by_short_name(name)
+    |> Enum.map(&(json_formatted_emoji/1))
+    json(conn, formatted_emoji)
+  end
+
+  def show(conn, %{}) do
+    formatted_emoji =
+    Exmoji.all
+    |> Enum.map(&(json_formatted_emoji/1))
+    json(conn, formatted_emoji)
+  end
+
+  defp json_formatted_emoji(%EmojiChar{} = emoji) do
+    %{unicode: EmojiChar.render(emoji)}
   end
 
   defp render_emoji(%EmojiChar{} = emoji, conn) do
-    json(conn, %{unicode: EmojiChar.render(emoji)})
+    json(conn, json_formatted_emoji(emoji))
   end
 
   defp render_emoji(_, conn) do
