@@ -15,7 +15,6 @@ defmodule EmojiWeb.EmojiController do
   def index(conn, %{"name" => name}) do
     render_emoji_list(conn, Exmoji.find_by_short_name(name))
   end
-
   def index(conn, %{}) do
     render_emoji_list(conn, Exmoji.all)
   end
