@@ -9,7 +9,7 @@ defmodule Emoji.Application do
     # List all child processes to be supervised
     children = [
       EmojiWeb.Endpoint,
-      EmojiWeb.PopularityStore
+      Emoji.PopularityStore
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

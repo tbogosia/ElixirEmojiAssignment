@@ -9,7 +9,7 @@ defmodule EmojiWeb.EmojiController do
   def index(conn, %{"name" => name}) do
     render_emoji_list(Exmoji.find_by_short_name(name), conn)
   end
-  def index(conn, %{}) do
+  def index(conn, _) do
     render_emoji_list(Exmoji.all, conn)
   end
 
@@ -19,15 +19,15 @@ defmodule EmojiWeb.EmojiController do
     |> render_emoji(conn)
   end
 
-  def show_popular(conn, %{}) do
-    EmojiWeb.PopularityStore.get_most_popular()
+  def show_popular(conn, _) do
+    Emoji.PopularityStore.get_most_popular()
     |> Enum.map(&(Exmoji.from_short_name/1))
     |> render_emoji_list(conn)
   end
 
   defp render_emoji(%EmojiChar{} = emoji, conn) do
     formatted_emoji = json_formatted_emoji(emoji)
-    EmojiWeb.PopularityStore.inc_popularity(emoji.short_name)
+    Emoji.PopularityStore.inc_popularity(emoji.short_name)
     json(conn, formatted_emoji)
   end
   defp render_emoji(_, conn) do

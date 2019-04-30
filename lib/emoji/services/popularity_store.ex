@@ -1,4 +1,4 @@
-defmodule EmojiWeb.PopularityStore do
+defmodule Emoji.PopularityStore do
   use Agent
 
   def start_link(_opts) do
@@ -8,9 +8,9 @@ defmodule EmojiWeb.PopularityStore do
   def get_most_popular(to_take \\ 5) do
     Agent.get(__MODULE__, fn state -> state end)
     |> Map.to_list()
-    |> Enum.sort(&(Kernel.elem(&1, 1) > Kernel.elem(&2, 1)))
+    |> Enum.sort(& elem(&1, 1) > elem(&2, 1))
     |> Enum.take(to_take)
-    |> Enum.map(&(Kernel.elem(&1, 0)))
+    |> Enum.map(&elem(&1, 0))
   end
 
   def inc_popularity(emoji_name) do
