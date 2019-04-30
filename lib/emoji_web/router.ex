@@ -13,15 +13,10 @@ defmodule EmojiWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", EmojiWeb do
-    pipe_through :browser
-
-    get "/", PageController, :index
-
-  end
-
   scope "/emojis", EmojiWeb do
     pipe_through :browser
+
+    get "/popular", EmojiController, :show_popular
 
     get "/:#{EmojiWeb.EmojiController.lookup_key}", EmojiController, :show
 

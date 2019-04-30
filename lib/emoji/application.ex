@@ -8,10 +8,8 @@ defmodule Emoji.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the endpoint when the application starts
-      EmojiWeb.Endpoint
-      # Starts a worker by calling: Emoji.Worker.start_link(arg)
-      # {Emoji.Worker, arg},
+      EmojiWeb.Endpoint,
+      EmojiWeb.PopularityStore
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

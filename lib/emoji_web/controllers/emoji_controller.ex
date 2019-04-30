@@ -6,38 +6,44 @@ defmodule EmojiWeb.EmojiController do
   @lookup_key "emoji_name"
   def lookup_key, do: @lookup_key
 
+  def index(conn, %{"name" => name}) do
+    render_emoji_list(Exmoji.find_by_short_name(name), conn)
+  end
+  def index(conn, %{}) do
+    render_emoji_list(Exmoji.all, conn)
+  end
+
   def show(conn, %{@lookup_key => emoji}) do
     emoji
     |> Exmoji.from_short_name()
     |> render_emoji(conn)
   end
 
-  def index(conn, %{"name" => name}) do
-    render_emoji_list(conn, Exmoji.find_by_short_name(name))
-  end
-  def index(conn, %{}) do
-    render_emoji_list(conn, Exmoji.all)
-  end
-
-  defp json_formatted_emoji(%EmojiChar{} = emoji) do
-    %{unicode: EmojiChar.render(emoji)}
-  end
-
-  defp render_emoji_list(conn, emoji_list) do
-    emoji_list
-    |> Enum.map(&(json_formatted_emoji/1))
-    |> (&(json(conn, &1))).()
+  def show_popular(conn, %{}) do
+    EmojiWeb.PopularityStore.get_most_popular()
+    |> Enum.map(&(Exmoji.from_short_name/1))
+    |> render_emoji_list(conn)
   end
 
   defp render_emoji(%EmojiChar{} = emoji, conn) do
-    json(conn, json_formatted_emoji(emoji))
+    formatted_emoji = json_formatted_emoji(emoji)
+    EmojiWeb.PopularityStore.inc_popularity(emoji.short_name)
+    json(conn, formatted_emoji)
   end
-
   defp render_emoji(_, conn) do
     conn
     |> put_status(:not_found)
     |> put_view(EmojiWeb.ErrorView)
     |> render("404.html")
+  end
+
+  defp render_emoji_list(emoji_list, conn) do
+    emojis = emoji_list |> Enum.map(&(json_formatted_emoji/1))
+    json(conn, emojis)
+  end
+
+  defp json_formatted_emoji(%EmojiChar{} = emoji) do
+    %{unicode: EmojiChar.render(emoji)}
   end
 
 end
